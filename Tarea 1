@@ -1,0 +1,48 @@
+import numpy as np    # numpy is the main module for numeric calculations
+import matplotlib.pyplot as plt  # matplotlib for plotting
+
+# Configuración de parámetros
+wr = np.linspace(0.1, 10, 1000)  # Rango de razón de frecuencias
+
+# Cálculo para diferentes valores de amortiguamiento
+zeta_values = [0.01, 0.05, 0.1, 0.3]
+TR_abs = [np.abs((1 + 1j * 2 * zeta * wr) / (1 - wr**2 + 1j * 2 * zeta * wr)) for zeta in zeta_values]
+
+# Crear la figura para la gráfica
+fig = plt.figure(figsize=(9, 6))
+ax = plt.gca()
+
+# Personalización del eje
+plt.setp(ax.get_ymajorticklabels(), family='serif', fontsize=16)
+plt.setp(ax.get_xmajorticklabels(), family='serif', fontsize=16)
+
+# Ajustar los márgenes de la gráfica
+plt.subplots_adjust(bottom=0.17, left=0.17, top=0.96, right=0.96)
+
+# Configuración de la cuadrícula
+ax.grid(True, linestyle=':', color='0.5')
+ax.set_axisbelow(True)
+
+# Etiquetas de los ejes
+plt.xlabel('Frequency ratio $\\Omega$', family='serif', fontsize=18, weight='bold', labelpad=5)
+plt.ylabel('|TR|', family='serif', fontsize=18, weight='bold', labelpad=10)
+
+# Trazar las curvas
+linestyles = ['-', '-.', '--', ':']
+labels = [r'$\\zeta$ = 0.01', r'$\\zeta$ = 0.05', r'$\\zeta$ = 0.1', r'$\\zeta$ = 0.3']
+for TR, ls, lbl in zip(TR_abs, linestyles, labels):
+    plt.loglog(wr, TR, linewidth=2, linestyle=ls, label=lbl)
+
+# Limitar los ejes
+plt.xlim(0.1, 10)
+plt.ylim(0.01, 100)
+
+# Leyenda
+leg = plt.legend(loc='upper right', fancybox=True)
+plt.setp(leg.get_texts(), family='Serif', fontsize=16)
+
+# Guardar la gráfica como archivo
+plt.savefig('frequency_response_plot.png', dpi=300)
+
+# Mostrar la gráfica
+plt.show()
